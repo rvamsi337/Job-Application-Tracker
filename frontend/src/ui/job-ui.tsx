@@ -488,7 +488,7 @@ export function RecruiterTable({
                   {recruiter.mobileNumber ? (
                     <button
                       type="button"
-                      onClick={() => copyText(recruiter.mobileNumber)}
+                      onClick={() => copyText(recruiter.mobileNumber!)}
                       className="rounded-full border border-slate-200 p-2 text-slate-500 transition hover:border-brand/40 hover:text-brand"
                       aria-label={`Copy recruiter mobile ${index + 1}`}
                     >
