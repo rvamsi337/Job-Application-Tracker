@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color: #102a43;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(255, 153, 0, 0.18), transparent 22%),
+    radial-gradient(circle at 0% 18%, rgba(35, 47, 62, 0.14), transparent 24%),
+    linear-gradient(180deg, #eef2f4 0%, #e7ecef 32%, #f6f8fa 100%);
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(255, 153, 0, 0.14), transparent 18%),
+    radial-gradient(circle at 8% 16%, rgba(35, 47, 62, 0.12), transparent 22%),
+    linear-gradient(180deg, #eef2f4 0%, #e8edef 34%, #f7f9fb 100%);
+  font-family: "Segoe UI", system-ui, sans-serif;
+  position: relative;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: auto;
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(10px);
+}
+
+body::before {
+  top: -8rem;
+  right: -4rem;
+  width: 30rem;
+  height: 30rem;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(255, 153, 0, 0.16) 0%, rgba(255, 153, 0, 0) 72%);
+}
+
+body::after {
+  left: -10rem;
+  bottom: -12rem;
+  width: 34rem;
+  height: 34rem;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(19, 25, 33, 0.12) 0%, rgba(19, 25, 33, 0) 72%);
+}
