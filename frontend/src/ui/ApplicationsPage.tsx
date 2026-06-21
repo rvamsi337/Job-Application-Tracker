@@ -154,7 +154,8 @@ export function ApplicationsPage() {
 
   function exportFilteredJobs() {
     const header = ["S.No", "Uploaded At", "Company", "Status", "Source", "Job URL", "Applied At"];
-    const rows = filteredJobs.map((job) => [
+    const exportDate = formatDateKey(new Date());
+    const rows = baseJobs.map((job) => [
       String(job.serialNo),
       job.uploadedAt,
       job.companyName ?? "Unknown",
@@ -170,7 +171,7 @@ export function ApplicationsPage() {
     const link = document.createElement("a");
 
     link.href = url;
-    link.download = `applications-page-${currentPage}-filtered.csv`;
+    link.download = `applications-list-${exportDate}.csv`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

@@ -29,6 +29,9 @@ function renderPage(initialPath = "/applications") {
 
 describe("ApplicationsPage", () => {
   beforeEach(() => {
+    window.URL.createObjectURL = vi.fn(() => "blob:applications-export");
+    window.URL.revokeObjectURL = vi.fn();
+
     const fetchMock = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
       const url = input.toString();
       if (url.includes("/api/jobs/") && init?.method === "PATCH") {
@@ -163,5 +166,52 @@ describe("ApplicationsPage", () => {
         expect.objectContaining({ method: "PATCH" })
       );
     });
+  });
+
+  it("exports filtered applications in serial number order", async () => {
+    const appendSpy = vi.spyOn(document.body, "appendChild");
+    const removeSpy = vi.spyOn(document.body, "removeChild");
+    const createdLink = document.createElement("a");
+    const clickSpy = vi.spyOn(createdLink, "click").mockImplementation(() => {});
+    const OriginalBlob = Blob;
+    let capturedCsv = "";
+
+    vi.stubGlobal(
+      "Blob",
+      class extends OriginalBlob {
+        constructor(parts?: BlobPart[], options?: BlobPropertyBag) {
+          super(parts ?? [], options);
+          capturedCsv = (parts ?? []).map((part) => (typeof part === "string" ? part : String(part))).join("");
+        }
+      }
+    );
+
+    const createElementSpy = vi.spyOn(document, "createElement").mockImplementation((tagName: string) => {
+      if (tagName.toLowerCase() === "a") {
+        return createdLink;
+      }
+      return document.createElementNS("http://www.w3.org/1999/xhtml", tagName);
+    });
+
+    renderPage();
+    const user = userEvent.setup();
+
+    expect(await screen.findByText("Applications")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Export Filtered Applications" }));
+
+    const appendedLink = appendSpy.mock.calls.at(-1)?.[0] as HTMLAnchorElement;
+    expect(appendedLink).toBe(createdLink);
+    expect(createdLink.download).toBe("applications-list-2026-06-21.csv");
+    expect(clickSpy).toHaveBeenCalled();
+    expect(capturedCsv).toContain('"1","2026-06-19T10:00:00Z","First","SAVED","MANUAL_ENTRY","https://example.com/jobs/1",""');
+    expect(capturedCsv).toContain('"2","2026-06-20T10:00:00Z","Second","PENDING","FILE_UPLOAD","https://example.com/jobs/2",""');
+    expect(capturedCsv.indexOf('"1","2026-06-19T10:00:00Z"')).toBeLessThan(
+      capturedCsv.indexOf('"2","2026-06-20T10:00:00Z"')
+    );
+
+    appendSpy.mockRestore();
+    removeSpy.mockRestore();
+    createElementSpy.mockRestore();
+    clickSpy.mockRestore();
   });
 });

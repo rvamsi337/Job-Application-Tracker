@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Download, Plus, Search, UploadCloud, UserRound } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { deleteRecruiter, getRecruiters, uploadRecruiters } from "../lib/api";
-import { InlineError, Panel, RecruiterTable } from "./job-ui";
+import { formatDateKey, InlineError, Panel, RecruiterTable } from "./job-ui";
 
 export function RecruitersPage() {
   const navigate = useNavigate();
@@ -50,6 +50,7 @@ export function RecruitersPage() {
 
   function exportRecruiters() {
     const header = ["Company", "Recruiter Name", "Recruiter Email", "Mobile Number", "Created At"];
+    const exportDate = formatDateKey(new Date());
     const rows = recruiters.map((recruiter) => [
       recruiter.companyName,
       recruiter.recruiterName ?? "",
@@ -62,10 +63,9 @@ export function RecruitersPage() {
     const blob = new Blob(["\uFEFF", csv], { type: "text/csv;charset=utf-8;" });
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement("a");
-    const suffix = search.trim() ? `-${search.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-")}` : "";
 
     link.href = url;
-    link.download = `recruiters${suffix || "-all"}.csv`;
+    link.download = `recruiters-list-${exportDate}.csv`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
