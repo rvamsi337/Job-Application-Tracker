@@ -108,14 +108,13 @@ Current core tables include:
 
 ### Backend on Render
 - Root directory: `backend`
-- Build command: `mvn clean package`
-- Start command:
-
-```text
-java -jar target/job-tracker-api-0.0.1-SNAPSHOT.jar
-```
-
+- Runtime: `Docker`
+- Uses [backend/Dockerfile](/c:/PROJECTS/MIT%20Project%20Web/backend/Dockerfile)
 - Required envs come from [backend/.env.example](/c:/PROJECTS/MIT%20Project%20Web/backend/.env.example)
+
+Important:
+- if Render does not show `Java` as a native runtime, use `Docker`
+- the backend Docker image already starts Spring Boot on port `10000`, which matches Render expectations
 
 ## Google Drive Backup
 Google Drive backup is optional. The app works without it.

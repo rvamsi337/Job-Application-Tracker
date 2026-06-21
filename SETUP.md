@@ -125,23 +125,14 @@ VITE_API_BASE_URL=https://your-render-backend.onrender.com
 ### Backend on Render
 - create a web service from GitHub
 - set root directory to `backend`
-- build command:
-
-```text
-mvn clean package
-```
-
-- start command:
-
-```text
-java -jar target/job-tracker-api-0.0.1-SNAPSHOT.jar
-```
-
+- choose runtime: `Docker`
+- Render will use [backend/Dockerfile](/c:/PROJECTS/MIT%20Project%20Web/backend/Dockerfile)
 - add envs from backend `.env`
 
 Important:
 - production secrets are entered directly in Render and Vercel dashboards
 - they do not come from GitHub
+- if Render does not show a native `Java` runtime, this Docker setup is the correct deployment path
 
 ## 9. Supabase Notes
 Supabase is the main cloud database.
